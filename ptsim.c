@@ -109,14 +109,27 @@ void print_page_table(int proc_num)
     }
 }
 
-// Kill process n and free all of its pages
-void kill_process() 
+void deallocate_page(int p) 
 {
+    mem[p] = 0; // set the value at address p in zero page to 0
+}
 
+// Kill process n and free all of its pages
+void kill_process(int p) 
+{
+    int page_table = get_page(); // get page table page for this process
+    page_table = mem[p + 64]; // get page table for this process
+
+    for(int i = 0; i < page_table; i++) {
+        if(page_table != 0) {
+            deallocate_page(p); // deallocate page
+        }
+    }
+    deallocate_page(page_table); // deallocate page table page
 }
 
 // For process n at virtual address a, store the value b
-void store_vale() 
+void store_value() 
 {
 
 }
@@ -124,7 +137,7 @@ void store_vale()
 // For process n, get the value at virtual address a
 void get_value_from_virtual_address() 
 {
-    
+
 }
 
 
