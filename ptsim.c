@@ -117,12 +117,20 @@ void deallocate_page(int p)
 // Kill process n and free all of its pages
 void kill_process(int p) 
 {
-    int page_table = get_page(); // get page table page for this process
-    page_table = mem[p + 64]; // get page table for this process
+    int page_table = get_page_table(p); // get page table page for this process
+    // page_table = mem[p + 64]; // get page table for this process
 
     for(int i = 0; i < page_table; i++) {
-        if(page_table != 0) {
-            deallocate_page(p); // deallocate page
+
+        int desired_page_address = get_address(page_table, i);
+
+        if(mem[desired_page_address] != 0) {
+
+            int desired_page_numb = mem[desired_page_address]; // get page number
+
+            deallocate_page(desired_page_numb); // deallocate page
+
+            mem[desired_page_address] = 0; // remove from page table
         }
     }
     deallocate_page(page_table); // deallocate page table page
