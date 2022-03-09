@@ -136,6 +136,22 @@ void kill_process(int p)
     deallocate_page(page_table); // deallocate page table page
 }
 
+int get_physical_address(int proc_num, int virtual_addr) 
+{
+    int page_table = get_page_table(proc_num); // get the page table
+    int page_table_addr = get_address(page_table, 0); // get the physical address
+
+    int virtual_page = virtual_addr >> 8; // get the virtual page
+
+    int physical_page = mem[page_table_addr + virtual_page]; // get virtual page's physical num from page table
+
+    int offset = virtual_addr & 255; // get the offset
+
+    int physical_addr = (physical_page << 8) | offset; // build the physical address from physical page and offset
+
+    return physical_addr;
+}
+
 // For process n at virtual address a, store the value b
 void store_value() 
 {
