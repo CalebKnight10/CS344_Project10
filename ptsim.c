@@ -1,6 +1,6 @@
 // Caleb Knight
 // CS 344
-// C project to simulate a page table pt 1 
+// C project to simulate a page table pt 2 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -108,6 +108,25 @@ void print_page_table(int proc_num)
         }
     }
 }
+
+// Kill process n and free all of its pages
+void kill_process() 
+{
+
+}
+
+// For process n at virtual address a, store the value b
+void store_vale() 
+{
+
+}
+
+// For process n, get the value at virtual address a
+void get_value_from_virtual_address() 
+{
+    
+}
+
 
 // Main -- process command line
 int main(int argc, char *argv[])
