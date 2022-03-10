@@ -161,9 +161,11 @@ void store_value(int proc_num, int virtual_addr, int value)
 }
 
 // For process n, get the value at virtual address a
-void get_value_from_virtual_address() 
+void get_value_from_virtual_address(int proc_num, int virtual_addr) 
 {
-
+    int physical_addr = get_physical_address(proc_num, virtual_addr);
+    int value = mem[physical_addr];
+    printf("Load proc %d: %d => %d, value=%d\n", proc_num, virtual_addr, physical_addr, value);
 }
 
 
