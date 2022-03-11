@@ -118,17 +118,17 @@ void deallocate_page(int p)
 void kill_process(int p) 
 {
     int page_table = get_page_table(p); // get page table page for this process
-    // page_table = mem[p + 64]; // get page table for this process
+    page_table = mem[p + 64]; // get page table for this process
 
-    for(int i = 0; i < page_table; i++) {
+    for(int i = 0; i < PAGE_COUNT; i++) {
 
         int desired_page_address = get_address(page_table, i);
 
         if(mem[desired_page_address] != 0) {
 
-            int desired_page_numb = mem[desired_page_address]; // get page number
+            int desired_page_number = mem[desired_page_address]; // get page number
 
-            deallocate_page(desired_page_numb); // deallocate page
+            deallocate_page(desired_page_number); // deallocate page
 
             mem[desired_page_address] = 0; // remove from page table
         }
@@ -142,11 +142,9 @@ int get_physical_address(int proc_num, int virtual_addr)
     int page_table_addr = get_address(page_table, 0); // get the physical address
 
     int virtual_page = virtual_addr >> 8; // get the virtual page
-
     int physical_page = mem[page_table_addr + virtual_page]; // get virtual page's physical num from page table
 
     int offset = virtual_addr & 255; // get the offset
-
     int physical_addr = (physical_page << 8) | offset; // build the physical address from physical page and offset
 
     return physical_addr;
@@ -157,6 +155,7 @@ void store_value(int proc_num, int virtual_addr, int value)
 {
     int physical_addr = get_physical_address(proc_num, virtual_addr);
     mem[physical_addr] = value;
+
     printf("Store proc %d: %d => %d, value=%d\n", proc_num, virtual_addr, physical_addr, value);
 }
 
@@ -165,6 +164,7 @@ void get_value_from_virtual_address(int proc_num, int virtual_addr)
 {
     int physical_addr = get_physical_address(proc_num, virtual_addr);
     int value = mem[physical_addr];
+
     printf("Load proc %d: %d => %d, value=%d\n", proc_num, virtual_addr, physical_addr, value);
 }
 
@@ -193,6 +193,24 @@ int main(int argc, char *argv[])
         else if (strcmp(argv[i], "ppt") == 0) {
             int proc_num = atoi(argv[++i]);
             print_page_table(proc_num);
+        }
+        else if (strcmp(argv[i], "kp") == 0)
+        {
+            int proc_num = atoi(argv[++i]);
+            kill_process(proc_num);
+        }
+        else if (strcmp(argv[i], "sb") == 0)
+        {
+            int proc_num = atoi(argv[++i]);
+            int virtual_addr = atoi(argv[++i]);
+            int value = atoi(argv[++i]);
+            store_value(proc_num, virtual_addr, value);
+        }
+        else if (strcmp(argv[i], "lb") == 0)
+        {
+            int proc_num = atoi(argv[++i]);
+            int virtual_addr = atoi(argv[++i]);
+            get_value_from_virtual_address(proc_num, virtual_addr);
         }
     }
 }
